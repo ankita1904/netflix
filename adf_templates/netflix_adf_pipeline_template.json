@@ -1,0 +1,77 @@
+{
+  "name": "Netflix_ETL_Pipeline",
+  "properties": {
+    "activities": [
+      {
+        "name": "CopyFromBlobToMySQL",
+        "type": "Copy",
+        "dependsOn": [],
+        "typeProperties": {
+          "source": {
+            "type": "DelimitedTextSource"
+          },
+          "sink": {
+            "type": "AzureMySqlSink"
+          }
+        },
+        "inputs": [
+          {
+            "referenceName": "BlobNetflixCSV",
+            "type": "DatasetReference"
+          }
+        ],
+        "outputs": [
+          {
+            "referenceName": "MySqlNetflixRaw",
+            "type": "DatasetReference"
+          }
+        ],
+        "linkedServiceName": {
+          "referenceName": "AzureBlobStorageLinkedService",
+          "type": "LinkedServiceReference"
+        }
+      },
+      {
+        "name": "Run_Cleaning_SQL",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "CopyFromBlobToMySQL",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "script": "-- cleaning.sql file should be executed here. You can paste the cleaning.sql content or reference it via flexible scripting.",
+          "scriptPath": "",
+          "scriptLinkedService": {
+            "referenceName": "MySqlLinkedService",
+            "type": "LinkedServiceReference"
+          }
+        }
+      },
+      {
+        "name": "Run_Normalization_SQL",
+        "type": "Script",
+        "dependsOn": [
+          {
+            "activity": "Run_Cleaning_SQL",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "script": "-- normalization.sql content -- split multi-valued columns into tables",
+          "scriptPath": "",
+          "scriptLinkedService": {
+            "referenceName": "MySqlLinkedService",
+            "type": "LinkedServiceReference"
+          }
+        }
+      }
+    ],
+    "annotations": []
+  }
+}
