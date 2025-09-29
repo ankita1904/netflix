@@ -1,3 +1,5 @@
+%sql
+%run "/Workspace/Users/ankitakalhapure@gmail.com/Netflix/Extract"
 -- analysis_comedy_horror.sql
 -- Directors who have created both Comedy and Horror movies, with counts
 final_result_df = spark.sql("""
