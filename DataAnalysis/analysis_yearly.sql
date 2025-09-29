@@ -1,3 +1,6 @@
+%sql
+%run "./Extract"
+
 -- analysis_yearly.sql
 -- For each year as per date_added, which director has maximum number of movies released
 WITH director_counts AS (
