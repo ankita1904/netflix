@@ -1,3 +1,6 @@
+%sql
+%run "/Workspace/Users/ankitakalhapure@gmail.com/Netflix/Extract"
+
 -- analysis_country.sql
 -- Country with highest number of comedy movies
 SELECT 
