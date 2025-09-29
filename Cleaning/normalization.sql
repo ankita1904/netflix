@@ -1,4 +1,5 @@
 %sql
+%run "/Workspace/Users/ankitakalhapure@gmail.com/Netflix/Extract"
 -- normalization.sql (Databricks SQL version)
 -- Split multi-value columns into normalized tables: directors, country, cast, listed_in, genre
 -- Using Databricks SQL SPLIT + EXPLODE instead of JSON_TABLE
