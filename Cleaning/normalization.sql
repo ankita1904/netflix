@@ -5,7 +5,9 @@
 
 -- netflix_directors
 DROP TABLE IF EXISTS netflix_directors;
-CREATE TABLE netflix_directors AS
+CREATE TABLE netflix_directors 
+USING PARQUET  
+AS
 SELECT
   show_id,
   TRIM(director_name) AS director
@@ -19,7 +21,9 @@ WHERE director_name IS NOT NULL AND director_name <> '';
 
 -- netflix_country
 DROP TABLE IF EXISTS netflix_country;
-CREATE TABLE netflix_country AS
+CREATE TABLE netflix_country
+USING PARQUET
+  AS
 SELECT
   show_id,
   TRIM(country_name) AS country
@@ -33,7 +37,9 @@ WHERE country_name IS NOT NULL AND country_name <> '';
 
 -- netflix_cast
 DROP TABLE IF EXISTS netflix_cast;
-CREATE TABLE netflix_cast AS
+CREATE TABLE netflix_cast 
+  USING PARQUET
+  AS
 SELECT
   show_id,
   TRIM(cast_name) AS cast
@@ -47,7 +53,9 @@ WHERE cast_name IS NOT NULL AND cast_name <> '';
 
 -- netflix_listed (categories)
 DROP TABLE IF EXISTS netflix_listed;
-CREATE TABLE netflix_listed AS
+CREATE TABLE netflix_listed 
+USING PARQUET  
+AS
 SELECT
   show_id,
   TRIM(listed_name) AS listed_in
@@ -61,7 +69,9 @@ WHERE listed_name IS NOT NULL AND listed_name <> '';
 
 -- netflix_genre (same as listed_in, just normalized into "genre")
 DROP TABLE IF EXISTS netflix_genre;
-CREATE TABLE netflix_genre AS
+CREATE TABLE netflix_genre 
+USING PARQUET
+  AS
 SELECT
   show_id,
   TRIM(genre_name) AS genre
