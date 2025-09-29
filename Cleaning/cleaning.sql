@@ -4,19 +4,18 @@
 -- Create a temporary deduplicated view using ROW_NUMBER
 DROP TABLE IF EXISTS netflix_stg;
 CREATE TABLE netflix_stg (
-    show_id VARCHAR(50) PRIMARY KEY,
-    type VARCHAR(20),
-    title VARCHAR(500),
+    show_id STRING,
+    type STRING,
+    title STRING,
     date_added DATE,
     release_year INT,
-    rating VARCHAR(50),
-    duration VARCHAR(100),
-    description VARCHAR(1000)
+    rating STRING,
+    duration STRING,
+    description STRING
 );
 
 -- Create a temporary table with row numbers to remove duplicates
-DROP TABLE IF EXISTS netflix_raw_dedupe_tmp;
-CREATE TABLE netflix_raw_dedupe_tmp AS
+CREATE TABLE netflix_raw_dedupe_tmp1 AS
 SELECT *
 FROM (
     SELECT *,
@@ -26,20 +25,23 @@ FROM (
 WHERE rn = 1;
 
 -- Insert into staging with casting and null handling
-INSERT INTO netflix_stg (show_id, type, title, date_added, release_year, rating, duration, description)
+INSERT INTO netflix_raw (show_id, type, title, date_added, release_year, rating, duration, description)
 SELECT
     show_id,
     type,
     title,
     CASE
         WHEN date_added IS NULL OR TRIM(date_added) = '' THEN NULL
-        ELSE STR_TO_DATE(date_added, '%M %d, %Y') 
+        ELSE TO_DATE(date_added, 'MMMM d, yyyy')
     END AS date_added,
     release_year,
     rating,
-    CASE WHEN duration IS NULL OR TRIM(duration) = '' THEN rating ELSE duration END AS duration,
+    CASE 
+        WHEN duration IS NULL OR TRIM(duration) = '' THEN rating 
+        ELSE duration 
+    END AS duration,
     description
-FROM netflix_raw_dedupe_tmp;
+FROM netflix_raw_dedupe_tmp1;
 
 -- Clean temp table
-DROP TABLE IF EXISTS netflix_raw_dedupe_tmp;
+DROP VIEW IF EXISTS netflix_raw_dedupe_tmp1;
