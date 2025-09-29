@@ -1,3 +1,6 @@
+%sql
+%run "./Extract"
+
 -- Directors who have both Movies and TV Shows
 
 SELECT
