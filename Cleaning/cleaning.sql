@@ -1,4 +1,15 @@
--- 1) Deduplicate records and populate staging table (netflix_stg)
+--Extracting netflix_raw from databricks dbfs using pyspark
+
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import col, split, explode
+
+spark = SparkSession.builder.appName("Netflix").getOrCreate()
+df = spark.read.option("header", "true").csv("dbfs:/FileStore/tables/netflix_raw.csv")
+df.createOrReplaceTempView("netflix_raw")
+df.show()
+display(table)
+
+-- Deduplicate records and populate staging table (netflix_stg)
 -- Adjust names/types if necessary. This script assumes netflix_raw exists.
 
 -- Create a temporary deduplicated view using ROW_NUMBER
@@ -13,9 +24,12 @@ CREATE TABLE netflix_stg (
     duration STRING,
     description STRING
 );
+USING PARQUET
 
 -- Create a temporary table with row numbers to remove duplicates
-CREATE TABLE netflix_raw_dedupe_tmp1 AS
+CREATE TABLE netflix_raw_dedupe_tmp1 
+    USING PARQUET
+    AS
 SELECT *
 FROM (
     SELECT *,
@@ -25,7 +39,7 @@ FROM (
 WHERE rn = 1;
 
 -- Insert into staging with casting and null handling
-INSERT INTO netflix_raw (show_id, type, title, date_added, release_year, rating, duration, description)
+INSERT INTO netflix_stg (show_id, type, title, date_added, release_year, rating, duration, description)
 SELECT
     show_id,
     type,
