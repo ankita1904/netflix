@@ -1,4 +1,5 @@
-%run "/Workspace/Users/ankitakalhapure@gmail.com/Netflix/Extract"
+%sql
+%run "./Extract"
 -- Deduplicate records and populate staging table (netflix_stg)
 -- Adjust names/types if necessary. This script assumes netflix_raw exists.
 
