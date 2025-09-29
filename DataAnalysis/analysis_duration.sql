@@ -1,3 +1,6 @@
+%sql
+%run "./Extract"
+
 -- analysis_duration.sql
 -- Average duration of movies in each genre
 SELECT
